@@ -14,18 +14,12 @@ public class MyService implements KVService {
     private final HttpServer server;
 
     @NotNull
-    private static String extractId(@NotNull final String query){
-        if (!query.startsWith(PREFIX)){
-            throw new IllegalArgumentException("illegal argument");
+    private static String extractId(@NotNull final String query) {
+        if(!query.startsWith(PREFIX)) {
+            throw new IllegalArgumentException("Error");
         }
-        String str  =query.substring(PREFIX.length());
-        if (str.isEmpty()) {
-            throw new IllegalArgumentException("Empty ID!");
-        }
-        return str;
+        return query.substring(PREFIX.length());
     }
-
-
 
     public MyService(int port, @NotNull final MyDAO dao) throws IOException{
         this.server = HttpServer.create(new InetSocketAddress(port),0);
