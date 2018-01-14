@@ -5,8 +5,11 @@ import com.sun.net.httpserver.HttpServer;
 import org.jetbrains.annotations.NotNull;
 import ru.mail.polis.KVService;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetSocketAddress;
+import java.nio.file.NoSuchFileException;
 
 public class MyService implements KVService {
     private static final String PREFIX = "id=";
@@ -32,21 +35,28 @@ public class MyService implements KVService {
         });
 
         this.server.createContext("/v0/entity", (HttpExchange http) -> {
-            final String id = extractId(http.getRequestURI().getQuery());
-            if(id.length()==0){
+            final String id;
+
+            try {
+                id = extractId(http.getRequestURI().getQuery());
+            } catch (IllegalArgumentException e) {
+                http.sendResponseHeaders(405, 0);
+                http.close();
+                return;
+            }
+
+            if (id.length() == 0) {
                 http.sendResponseHeaders(400, 0);
                 http.close();
-            }
-            else {
+            } else {
                 switch (http.getRequestMethod()) {
                     case "GET":
                         try {
                             final byte[] getValue = dao.get(id);
-                            http.sendResponseHeaders(200, getValue.length);
+                            http.sendResponseHeaders(200, 0);
                             http.getResponseBody().write(getValue);
-                        } catch (IOException e) {
+                        } catch (NoSuchFileException e) {
                             http.sendResponseHeaders(404, 0);
-                            http.close();
                         }
                         break;
 
@@ -56,13 +66,25 @@ public class MyService implements KVService {
                         break;
 
                     case "PUT":
-                        final int contentLength = Integer.valueOf(http.getRequestHeaders().getFirst("Content-Length"));
-                        final byte[] putValue = new byte[contentLength];
-                        if (contentLength>0 && http.getRequestBody().read(putValue)!=putValue.length) {
-                            throw new IOException("Can't read!");
+                        try (ByteArrayOutputStream out = new ByteArrayOutputStream();
+                             InputStream in = http.getRequestBody()) {
+                            byte[] putValue;
+                            byte[] buffer = new byte[1024];
+                            while (true) {
+                                int readBytes = in.read(buffer);
+                                if (readBytes <= 0) {
+                                    break;
+                                }
+                                out.write(buffer, 0, readBytes);
+                            }
+
+                            putValue = out.toByteArray();
+                            dao.upsert(id, putValue);
+                            http.sendResponseHeaders(201, 0);
+                        } catch (IOException e) {
+                            http.sendResponseHeaders(500, 0);
                         }
-                        dao.upsert(id, putValue);
-                        http.sendResponseHeaders(201, 0);
+
                         break;
 
                     default:

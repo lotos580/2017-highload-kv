@@ -3,11 +3,14 @@ package ru.mail.polis.Vothcitsev;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.NoSuchElementException;
 
 public class MyFileDAO implements MyDAO {
     @NotNull
     private final File dir;
+
     @NotNull
     private File getFile(@NotNull final String key){
         return new File(dir, key);
@@ -20,20 +23,15 @@ public class MyFileDAO implements MyDAO {
     @NotNull
     @Override
     public byte[] get(@NotNull final String key) throws NoSuchElementException, IllegalArgumentException, IOException{
-        final File file =  new File(dir, key);
-
-        final byte[] value = new byte[(int) file.length()];
-        try(InputStream is = new FileInputStream(file)){
-            if (is.read(value) != value.length) {
-                throw new IOException("Can't read");
-            }
-        }
-        return value;
+        return Files.readAllBytes(Paths.get(dir + File.separator + key));
     }
+
     @Override
     public void upsert(@NotNull final String key, @NotNull final byte[] value)throws IllegalArgumentException, IOException{
         try(OutputStream os = new FileOutputStream(getFile(key))){
             os.write(value);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
