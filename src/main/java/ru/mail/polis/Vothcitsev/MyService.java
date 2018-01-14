@@ -10,9 +10,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
 import java.nio.file.NoSuchFileException;
+import java.util.concurrent.Executors;
 
 public class MyService implements KVService {
     private static final String PREFIX = "id=";
+    private static final String STATUS_RESPONSE = "ONLINE";
     @NotNull
     private final HttpServer server;
 
@@ -26,11 +28,13 @@ public class MyService implements KVService {
 
     public MyService(int port, @NotNull final MyDAO dao) throws IOException{
         this.server = HttpServer.create(new InetSocketAddress(port),0);
+        this.server.setExecutor(Executors.newFixedThreadPool(
+                Runtime.getRuntime().availableProcessors()
+        ));
 
         this.server.createContext("/v0/status", http -> {
-            final String response = "ONLINE";
-            http.sendResponseHeaders(200, response.length());
-            http.getResponseBody().write(response.getBytes());
+            http.sendResponseHeaders(200, STATUS_RESPONSE.length());
+            http.getResponseBody().write(STATUS_RESPONSE.getBytes());
             http.close();
         });
 
