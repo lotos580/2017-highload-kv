@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import org.jetbrains.annotations.NotNull;
 import ru.mail.polis.KVService;
+import sun.misc.IOUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
