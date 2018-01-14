@@ -4,7 +4,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.util.NoSuchElementException;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;
@@ -25,15 +27,21 @@ public class MyFileDAO implements MyDAO {
 
     @Override
     public void upsert(@NotNull final String key, @NotNull final byte[] value)throws IllegalArgumentException, IOException{
-        try(OutputStream os = new FileOutputStream(new File(dir, key))){
-            os.write(value);
+        Files.write(Paths.get(dir + File.separator + key), value);
+    }
+
+    @Override
+    public void delete(@NotNull final String key) {
+        try {
+            Files.delete(Paths.get(dir + File.separator + key));
         } catch (IOException e) {
-            e.printStackTrace();
+            // e.printStackTrace();
+            // log it
         }
     }
 
     @Override
-    public void delete(@NotNull final String key) throws IllegalArgumentException, IOException{
-        new File(dir, key).delete();
+    public boolean isDataExist(@NotNull String key) {
+        return Files.exists(Paths.get(dir + File.separator + key));
     }
 }

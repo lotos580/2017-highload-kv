@@ -9,7 +9,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetSocketAddress;
-import java.nio.file.NoSuchFileException;
 import java.util.concurrent.Executors;
 
 public class MyService implements KVService {
@@ -52,50 +51,50 @@ public class MyService implements KVService {
             if (id.length() == 0) {
                 http.sendResponseHeaders(400, 0);
                 http.close();
-            } else {
-                switch (http.getRequestMethod()) {
-                    case "GET":
-                        try {
-                            final byte[] getValue = dao.get(id);
-                            http.sendResponseHeaders(200, 0);
-                            http.getResponseBody().write(getValue);
-                        } catch (NoSuchFileException e) {
-                            http.sendResponseHeaders(404, 0);
-                        }
-                        break;
-
-                    case "DELETE":
-                        dao.delete(id);
-                        http.sendResponseHeaders(202, 0);
-                        break;
-
-                    case "PUT":
-                        try (ByteArrayOutputStream out = new ByteArrayOutputStream();
-                             InputStream in = http.getRequestBody()) {
-                            byte[] putValue;
-                            byte[] buffer = new byte[1024];
-                            while (true) {
-                                int readBytes = in.read(buffer);
-                                if (readBytes <= 0) {
-                                    break;
-                                }
-                                out.write(buffer, 0, readBytes);
-                            }
-
-                            putValue = out.toByteArray();
-                            dao.upsert(id, putValue);
-                            http.sendResponseHeaders(201, 0);
-                        } catch (IOException e) {
-                            http.sendResponseHeaders(500, 0);
-                        }
-
-                        break;
-
-                    default:
-                        http.sendResponseHeaders(405, 0);
-                }
-                http.close();
+                return;
             }
+
+            switch (http.getRequestMethod()) {
+                case "GET":
+
+                    if (dao.isDataExist(id)) {
+                        http.sendResponseHeaders(200, 0);
+                        http.getResponseBody().write(dao.get(id));
+                    } else {
+                        http.sendResponseHeaders(404, 0);
+                    }
+
+                    break;
+
+                case "DELETE":
+                    dao.delete(id);
+                    http.sendResponseHeaders(202, 0);
+                    break;
+
+                case "PUT":
+                    try (ByteArrayOutputStream out = new ByteArrayOutputStream();
+                         InputStream in = http.getRequestBody()) {
+                        byte[] buffer = new byte[1024];
+                        while (true) {
+                            int readBytes = in.read(buffer);
+                            if (readBytes < 0) {
+                                break;
+                            }
+                            out.write(buffer, 0, readBytes);
+                        }
+
+                        dao.upsert(id, out.toByteArray());
+                        http.sendResponseHeaders(201, 0);
+                    } catch (IOException e) {
+                        http.sendResponseHeaders(500, 0);
+                    }
+
+                    break;
+
+                default:
+                    http.sendResponseHeaders(405, 0);
+            }
+            http.close();
         });
 
     }
@@ -105,7 +104,7 @@ public class MyService implements KVService {
         this.server.start();
     }
     @Override
-    public void stop(){
+    public void stop() {
         this.server.stop(0);
     }
 }

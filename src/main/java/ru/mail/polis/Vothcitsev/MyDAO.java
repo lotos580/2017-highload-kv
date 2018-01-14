@@ -12,4 +12,6 @@ public interface MyDAO {
     void upsert(@NotNull String key, @NotNull byte[] value)throws IllegalArgumentException, IOException;
 
     void delete(@NotNull String key) throws IllegalArgumentException, IOException;
+
+    boolean isDataExist(@NotNull String key);
 }
