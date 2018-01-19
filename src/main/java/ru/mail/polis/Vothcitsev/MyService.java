@@ -73,8 +73,11 @@ public class MyService implements KVService {
                     break;
 
                 case "PUT":
-                    try (ByteArrayOutputStream out = new ByteArrayOutputStream();
-                         InputStream in = http.getRequestBody()) {
+                    try (
+                        ByteArrayOutputStream out =
+                                 new ByteArrayOutputStream();
+                        InputStream in = http.getRequestBody()
+                    ) {
                         byte[] buffer = new byte[1024];
                         while (true) {
                             int readBytes = in.read(buffer);

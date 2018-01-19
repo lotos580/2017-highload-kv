@@ -54,39 +54,39 @@ Transfer/sec:      9.11KB
 
 #### 2 threads, 4 connections
 ```sh
-wrk --latency -c4 -d2m -s getWithoutRepeats.lua http://localhost:8080
 Running 2m test @ http://localhost:8080
   2 threads and 4 connections
-	  Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    40.02ms    1.00ms  49.91ms   95.71%
-    Req/Sec    49.85      7.39    60.00     45.35%
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    40.15ms    1.66ms 116.79ms   93.47%
+    Req/Sec    49.70      7.26    60.00     47.58%
   Latency Distribution
-     50%   39.88ms
-     75%   39.93ms
-     90%   40.00ms
-     99%   43.92ms
-  11957 requests in 2.00m, 12.72MB read
-  Non-2xx or 3xx responses: 48
-Requests/sec:     99.60
+     50%   39.89ms
+     75%   39.95ms
+     90%   40.05ms
+     99%   44.01ms
+  11921 requests in 2.00m, 6.88MB read
+  Non-2xx or 3xx responses: 5998
+Requests/sec:     99.34
+Transfer/sec:     58.67KB
 ```
 ---
 
 #### 4 threads, 4 connections
 ```sh
-wrk --latency -t4 -c4 -d2m -s getWithoutRepeats.lua http://localhost:8080
 Running 2m test @ http://localhost:8080
   4 threads and 4 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    40.05ms    1.34ms 115.65ms   95.54%
-    Req/Sec    24.91      5.00    30.00     50.94%
+    Latency    40.14ms    1.50ms 118.45ms   93.21%
+    Req/Sec    24.85      5.01    30.00     51.00%
   Latency Distribution
      50%   39.89ms
-     75%   39.94ms
-     90%   40.01ms
-     99%   43.96ms
-  11959 requests in 2.00m, 12.77MB read
-Requests/sec:     99.58
-Transfer/sec:    108.92KB
+     75%   39.95ms
+     90%   40.05ms
+     99%   44.00ms
+  11930 requests in 2.00m, 12.66MB read
+  Non-2xx or 3xx responses: 83
+Requests/sec:     99.35
+Transfer/sec:    107.98KB
 ```
 ---
 
@@ -137,16 +137,16 @@ wrk --latency -c4 -d2m -s getWithRepeats.lua http://localhost:8080
 Running 2m test @ http://localhost:8080
   2 threads and 4 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    40.06ms    1.74ms 131.16ms   95.58%
-    Req/Sec    49.82      8.14    60.00     34.13%
+    Latency    40.22ms    1.34ms 105.71ms   91.54%
+    Req/Sec    49.65      7.42    60.00     45.08%
   Latency Distribution
-     50%   39.88ms
-     75%   39.94ms
-     90%   40.02ms
-     99%   43.96ms
-  11947 requests in 2.00m, 12.76MB read
-Requests/sec:     99.54
-Transfer/sec:    108.87KB
+     50%   39.90ms
+     75%   39.97ms
+     90%   40.12ms
+     99%   44.01ms
+  11909 requests in 2.00m, 12.72MB read
+Requests/sec:     99.17
+Transfer/sec:    108.47KB
 ```
 ---
 
@@ -156,17 +156,16 @@ wrk --latency -t4 -c4 -d2m -s getWithRepeats.lua http://localhost:8080
 Running 2m test @ http://localhost:8080
   4 threads and 4 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    40.20ms    1.43ms  91.40ms   93.07%
-    Req/Sec    24.83      5.02    30.00     51.29%
+    Latency    40.11ms    1.28ms  83.62ms   93.74%
+    Req/Sec    24.88      5.01    30.00     50.58%
   Latency Distribution
-     50%   39.91ms
-     75%   39.97ms
-     90%   40.10ms
-     99%   44.03ms
-  11915 requests in 2.00m, 1.09MB read
-  Non-2xx or 3xx responses: 11915
-Requests/sec:     99.21
-Transfer/sec:      9.30KB
+     50%   39.90ms
+     75%   39.95ms
+     90%   40.05ms
+     99%   44.00ms
+  11938 requests in 2.00m, 12.75MB read
+Requests/sec:     99.42
+Transfer/sec:    108.75KB
 ```
 ---
 
@@ -220,21 +219,20 @@ Transfer/sec:      9.05KB
 
 #### 2 threads, 4 connections
 ```sh
-wrk --latency -c4 -d2m -s getWithoutRepeats.lua http://localhost:8080
 Running 2m test @ http://localhost:8080
   2 threads and 4 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    40.27ms    1.96ms 127.98ms   90.90%
-    Req/Sec    49.54      7.56    60.00     43.33%
+    Latency    40.19ms    1.85ms 119.33ms   92.83%
+    Req/Sec    49.65      7.09    60.00     50.13%
   Latency Distribution
-     50%   39.90ms
-     75%   39.97ms
-     90%   40.12ms
-     99%   44.02ms
-  11890 requests in 2.00m, 12.65MB read
-  Non-2xx or 3xx responses: 53
-Requests/sec:     99.07
-Transfer/sec:    107.92KB
+     50%   39.89ms
+     75%   39.95ms
+     90%   40.06ms
+     99%   44.00ms
+  11911 requests in 2.00m, 6.87MB read
+  Non-2xx or 3xx responses: 5992
+Requests/sec:     99.25
+Transfer/sec:     58.63KB
 ```
 ---
 
@@ -244,16 +242,17 @@ wrk --latency -t4 -c4 -d2m -s getWithoutRepeats.lua http://localhost:8080
 Running 2m test @ http://localhost:8080
   4 threads and 4 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    40.05ms    1.34ms 115.65ms   95.54%
-    Req/Sec    24.91      5.00    30.00     50.94%
+    Latency    40.18ms    1.43ms  93.16ms   92.22%
+    Req/Sec    24.84      5.01    30.00     51.27%
   Latency Distribution
-     50%   39.89ms
-     75%   39.94ms
-     90%   40.01ms
-     99%   43.96ms
-  11959 requests in 2.00m, 12.77MB read
-Requests/sec:     99.58
-Transfer/sec:    108.92KB
+     50%   39.90ms
+     75%   39.96ms
+     90%   40.08ms
+     99%   43.99ms
+  11916 requests in 2.00m, 12.65MB read
+  Non-2xx or 3xx responses: 77
+Requests/sec:     99.50
+Transfer/sec:    107.92KB
 ```
 ---
 
@@ -304,16 +303,16 @@ wrk --latency -c4 -d2m -s getWithRepeats.lua http://localhost:8080
 Running 2m test @ http://localhost:8080
   2 threads and 4 connections
   Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    40.24ms    1.64ms 125.51ms   90.55%
-    Req/Sec    49.56      7.26    60.00     47.12%
+    Latency    40.13ms    1.46ms 108.57ms   93.62%
+    Req/Sec    49.75      7.53    60.00     43.66%
   Latency Distribution
-     50%   39.90ms
-     75%   39.97ms
-     90%   40.11ms
-     99%   44.01ms
-  11895 requests in 2.00m, 12.71MB read
-Requests/sec:     99.11
-Transfer/sec:    108.41KB
+     50%   39.89ms
+     75%   39.95ms
+     90%   40.04ms
+     99%   43.98ms
+  11927 requests in 2.00m, 12.74MB read
+Requests/sec:     99.37
+Transfer/sec:    108.69KB
 ```
 ---
 
@@ -322,17 +321,17 @@ Transfer/sec:    108.41KB
 wrk --latency -t4 -c4 -d2m -s getWithRepeats.lua http://localhost:8080
 Running 2m test @ http://localhost:8080
   4 threads and 4 connections
-^[[B^[[B^[[B  Thread Stats   Avg      Stdev     Max   +/- Stdev
-    Latency    40.26ms    1.52ms  93.23ms   90.23%
-    Req/Sec    24.77      4.99    30.00     52.41%
+  Thread Stats   Avg      Stdev     Max   +/- Stdev
+    Latency    40.17ms    1.91ms 127.20ms   93.49%
+    Req/Sec    24.85      5.02    30.00     51.28%
   Latency Distribution
-     50%   39.91ms
-     75%   39.98ms
-     90%   40.23ms
-     99%   44.03ms
-  11894 requests in 2.00m, 12.70MB read
-Requests/sec:     99.08
-Transfer/sec:    108.38KB
+     50%   39.89ms
+     75%   39.95ms
+     90%   40.05ms
+     99%   43.99ms
+  11923 requests in 2.00m, 12.74MB read
+Requests/sec:     99.89
+Transfer/sec:    108.60KB
 ```
 ---
 
